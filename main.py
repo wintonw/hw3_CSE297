@@ -1,4 +1,3 @@
-from utils import *
 import hashlib
 import os
 import random
@@ -40,12 +39,17 @@ def TXTtoData():
     # read txt and put data into data structure
     allFiles = os.listdir()
     data = []
+    txtFile = False  # existence of .txt
     for i in allFiles:
         if '.txt' in i:
+            txtFile = True
             file = open(i, "r")
             lines = file.readlines()
             for line in lines:
                 data.append(line.replace("\n", ""))
+
+    if txtFile == False:
+        raise "No .txt in directory"
 
     return data
 
@@ -79,7 +83,12 @@ class MerkleTree:
 
 if __name__ == "__main__":
     # createTXT() # used to created a txt file
-    accounts = TXTtoData()
+    try:
+        accounts = TXTtoData()
+    except:
+        createTXT()
+        accounts = TXTtoData()
+
     leafHash = []
     for account in accounts:
         leafHash.append(hash(account))
